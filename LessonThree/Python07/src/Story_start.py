@@ -6,7 +6,7 @@
 import time,os,sys
 sys.path.append('..')
 from lib import common
-from lib.Players_model import players_Model
+# from lib.Players_model import players_Model
 DIR = os.path.dirname(__file__)
 DIR = DIR.replace('src','db/')
 TAG = True
@@ -329,6 +329,8 @@ def Lock_demon_tower_Top(user):
 
 
 def Wu_Duo(user):
+
+
     time.sleep(2)
     title = """
                             * * * * * * * * * * * * * * * * * * * * * * *终章：武夺* * * * * * * * * * * * * * * * * * * * * * *
@@ -336,12 +338,8 @@ def Wu_Duo(user):
     print (title)
     time.sleep(5)
     text = """
-                        相传很久以前,于古国疆域,有一奇人姓夸名父.
-                        以大力闻于世间,以才智惊于圣贤,以风韵传于万载..
-                        忽一日，慕之者至.询问之，其曰...
-                        吾父乃真之才,生于凡中.无师而达天地...
-                        终其一生教化万民,此乃吾真之所持..
-                        父之事迹.且听我慢慢道来...
+                        经过不懈的努力，战胜了诸多困苦（实在懒得编了），
+                        我们的主角终于和美女团结友爱的在一起生活，剧终
 
         """
     for i in text.decode('utf-8'):
@@ -350,11 +348,14 @@ def Wu_Duo(user):
             print i.encode('utf-8'),
         else:
             print i.encode('utf-8'),
-
+    exit()
 
 
 
 def Fail_ending_one():
+
+
+
     time.sleep(2)
     title = """
                                 * * * * * * * * * * * * * * * * * * * * * * *终章：武夺* * * * * * * * * * * * * * * * * * * * * * *
