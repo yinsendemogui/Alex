@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-
-a = '123c456'
-conn,addr = a.split()
-print (conn)
-print (addr)
-
-
+import json,pickle
+name = 'ddd'
+password = 'ccc'
+a = 'register' + ' '+name+','+password
+print (a)
+action,message = a.split()
+print (action)
+print (message)
+name,password = message.split(',')
+print (name)
+print (password)

@@ -9,23 +9,38 @@ TAG =True
 
 DIR = os.path.dirname(os.path.abspath(__file__))
 DIR = DIR+'/Folder/'
+HOST = 'localhost'
+PORT = 8888
 
 
 def Recvfile(s,filename):
+    """
+    接收文件方法函数
+    :param s: 套接字封装对象
+    :param filename: 目标文件名
+    :return:
+    """
     print ("开始下载文件...")
     buffer = []
     while TAG:
         d = s.recv(4096)
-        if not d or d == 'exit':
+        if d == 'exit':
             break
         buffer.append(d)
     data = ''.join(buffer)
+    print (data)
     with open(DIR+filename,'w') as f:
         f.write(data)
     print ("文件下载完毕！")
 
 
 def Sendfile(s,filename):
+    """
+    放送文件方法函数
+    :param s: 套接字封装对象
+    :param filename: 目标文件名
+    :return:
+    """
     print ("开始上传文件！")
     with open(DIR+filename,'r') as f:
         while TAG:
@@ -41,42 +56,123 @@ def Sendfile(s,filename):
 
 
 def Confirm(s,command):
+    """
+    验证与服务器连接是否正常；
+    把用户命令发过去，让服务器做好相应准备准备
+    :param s: 套接字封装对象
+    :param command: 用户输入的命令
+    :return:
+    """
     s.sendall(command)
     re = s.recv(4096)
     if re == 'Ready!':
         return True
+    elif re == 'False!':
+        return False
+    else:
+        print ("与服务器连接出现异常！")
+
+
+def File_transfer(s):
+
+    while TAG:
+        command = raw_input("请输入你想执行的命令>>")
+        if not command:
+            continue
+        if command.lower().strip() == 'help':
+            print ("请用'put'+'空格'+'文件名'的格式上传文件")
+            print ("请用'get'+'空格'+'文件名'的格式下载文件")
+            print ("输入'ls'查看用户家目录")
+            continue
+        if command.lower().strip() == 'ls':
+            s.send('ls')
+            data = s.recv(4096)
+            print (data)
+            continue
+        try:
+            action,filename = command.strip().split()
+            action = action.lower()
+        except:
+            print ("您的输入有误!输入help查看帮助文档")
+        if action == 'put':
+            re = Confirm(s,command)
+            if re == True:
+                Sendfile(s, filename)
+            else:
+                print ("对方服务器没有准备好！")
+                break
+        elif action == 'get':
+            re = Confirm(s,command)
+            if re == True:
+                print ("注册成功！")
+                Recvfile(s, filename)
+            else:
+                print ("对方服务器没有准备好！")
+                break
+        else:
+            print ("你输入的命令有误！输入help查看帮助文档")
+
+
+
+def Login(s):
+    name = raw_input("请输入你的用户名：")
+    password = raw_input("请输入你的密码：")
+    command = 'login'+' '+ name + ',' + password
+    re = Confirm(s, command)
+    if re == True:
+        print ("登陆成功！")
+        File_transfer(s)
+    elif re == False:
+        print ("您的输入有误，请重新输入！")
+        Login(s)
+    else:
+        print ("与服务器连接出现异常！")
+
+
+def Register(s):
+    name = raw_input("请输入你的用户名：")
+    password = raw_input("请输入你的密码：")
+    Password = raw_input("请再次输入密码：")
+    if password != Password:
+        print ("你的密码两次输入不一致，请重新输入！")
+        Register(s)
+    command = 'register' + ' ' + name + ',' + password
+    print (command)
+    re = Confirm(s,command)
+    if re == True:
+        File_transfer(s)
+    elif re == False:
+        print ("用户名重复，请重新输入！")
+        Register(s)
+    else:
+        print ("与服务器连接出现异常！")
+
+def Main(s,log = '未联通主机...'):
+
+    text = """
+            用户登陆界面      {0}
+
+            1，用户登陆
+            2，用户注册
+    """.format(log)
+    print (text)
+    choose = raw_input("请输入索引进行选择：")
+    if choose == '1':
+        Login(s)
+    elif choose == '2':
+        Register(s)
+    else:
+        print ("你的选择有误！")
 
 
 if __name__ == "__main__":
-    host = 'localhost'
-    port = 8888
+
     s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     try:
-        s.connect((host,port))
-        print (s.recv(1024))
-        while TAG:
-            command = raw_input("请输入你想执行的命令>>")
-            if not command:
-                continue
-            action,filename = command.strip().split()
-            if action == 'put':
-                re = Confirm(s,command)
-                if re == True:
-                    Sendfile(s, filename)
-                else:
-                    print ("对方服务器没有准备好！")
-                    break
-            elif action == 'get':
-                re = Confirm(s,command)
-                if re == True:
-                    Recvfile(s, filename)
-                else:
-                    print ("对方服务器没有准备好！")
-                    break
-            else:
-                print ("你输入的命令有误！")
+        s.connect((HOST,PORT))
+        Main(s,s.recv(1024))
     except Exception,e:
-        print ("客户端连接有错！",e)
+        print "服务器连接不上....",e
     finally:
         s.close()
 
@@ -90,18 +186,3 @@ if __name__ == "__main__":
 
 
 
-# s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-#
-# s.connect(("localhost",8888))
-#
-#
-# while True:
-#
-#     message = raw_input('输入：')
-#     if message == 'n':
-#         break
-#     s.send(message)
-#     data = s.recv(1024)
-#     print (data)
-#
-# s.close()
