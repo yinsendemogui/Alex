@@ -2,10 +2,15 @@
 # -*- coding: utf-8 -*-
 # 练习
 
-import re
+import json
 
-1111111
-1111111
+def aaa_xxx():
+    print (2)
 
 
-GIT
+a = 'aaa'
+b = a + '_xxx'
+eval(b)()
+
+
+
