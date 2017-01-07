@@ -4,13 +4,31 @@
 
 import json
 
-def aaa_xxx():
-    print (2)
+class PersonInfo :
+    def __init__(self,name,age):
+        self.Name = name
+        self.Age  = age
+
+    def aaa(self):
+        if hasattr(self,'bbb'):
+            P = getattr(self,'bbb')
+            print ("1")
+            P()
+
+            # print (getattr(self,'aaa'))
+
+    def bbb(self):
+        print ("2")
 
 
-a = 'aaa'
-b = a + '_xxx'
-eval(b)()
+    def handle(self):
+        # b = 'aa'
+        # c = eval(b+'a')
+        d = 'self.aa'
+        eval(d+'a')()
+
+P = PersonInfo("chensiqi","32")
+P.handle()
 
 
 

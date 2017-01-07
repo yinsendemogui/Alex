@@ -3,15 +3,15 @@
 # auther:Mr.chen
 # 描述：
 
+path = '/Users/chensiqi/Git/Alex/LessonFour/FTP_server/Folder/chensiqi/'
 
-
-class aaa:
-    def __init__(self,name):
-        self.Name = name
-
-
-class bbb(aaa):
-    def __init__(self,age,name):
-        aaa.__init__(self,name)
-        self.Age = age
-
+list = path.split('/')
+del list[0]
+del list[len(list) - 1]
+del list[len(list) - 1]
+str = '/'
+for i in range(len(list)):
+    str = str + list[i] + '/'
+    print i
+print list
+print str

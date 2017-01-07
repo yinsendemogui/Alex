@@ -5,7 +5,7 @@
 
 import socket
 import os
-import threading
+import threadding_ex
 import time
 import json
 from user_users import PersonInfo
@@ -85,7 +85,7 @@ if __name__ == '__main__':
         # 接受一个新连接
         conn,addr = s.accept()
         # 创建一个新线程处理TCP连接
-        t = threading.Thread(target=tcplink,args=(conn,addr))
+        t = threadding_ex.Thread(target=tcplink, args=(conn, addr))
         t.start()
 
 
